@@ -1,0 +1,19 @@
+[{
+  "selector": "edge.unbundled-bezier",
+  "style": {
+    "curve-style": "unbundled-bezier",
+    "control-point-distances": 120,
+    "control-point-weights": 0.1
+  }
+}, {
+    "selector": "node",
+    "style": {
+      "height": 5,
+      "width": 5,
+      "background-color": "#FE6A4A",
+      "label": "data(id)",
+      "shape": "roundrectangle",
+      "text-valign": "center",
+      "text-halign": "center"
+    }
+  }]

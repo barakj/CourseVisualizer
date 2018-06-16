@@ -1,0 +1,177 @@
+[{
+  "data": {
+    "id": "CPSC 110",
+    "weight": 0
+  },
+  "position": {
+    "x": 50,
+    "y": 100
+  },
+  "group": "nodes",
+  "removed": false,
+  "selected": false,
+  "selectable": true,
+  "locked": false,
+  "grabbable": false,
+  "classes": ""
+}, {
+  "data": {
+    "id": "CPSC 210",
+    "weight": 23
+  },
+  "position": {
+    "x": 100,
+    "y": 75
+  },
+  "group": "nodes",
+  "removed": false,
+  "selected": false,
+  "selectable": true,
+  "locked": false,
+  "grabbable": false,
+  "classes": ""
+}, {
+  "data": {
+    "id": "CPSC 310",
+    "weight": 0
+  },
+  "position": {
+    "x": 150,
+    "y": 100
+  },
+  "group": "nodes",
+  "removed": false,
+  "selected": false,
+  "selectable": true,
+  "locked": false,
+  "grabbable": false,
+  "classes": ""
+}, {
+  "data": {
+    "id": "CPSC 121",
+    "weight": 50
+  },
+  "position": {
+    "x": 50,
+    "y": 200
+  },
+  "group": "nodes",
+  "removed": false,
+  "selected": false,
+  "selectable": true,
+  "locked": false,
+  "grabbable": false,
+  "classes": ""
+}, {
+  "data": {
+    "id": "CPSC 221",
+    "weight": 60
+  },
+  "position": {
+    "x": 100,
+    "y": 225
+  },
+  "group": "nodes",
+  "removed": false,
+  "selected": false,
+  "selectable": true,
+  "locked": false,
+  "grabbable": false,
+  "classes": ""
+},{
+  "data": {
+    "id": "CPSC 213",
+    "weight": 60
+  },
+  "position": {
+    "x": 100,
+    "y": 150
+  },
+  "group": "nodes",
+  "removed": false,
+  "selected": false,
+  "selectable": true,
+  "locked": false,
+  "grabbable": false,
+  "classes": ""
+}
+, {
+  "data": {
+    "id": "CPSC 320",
+    "weight": 60
+  },
+  "position": {
+    "x": 150,
+    "y": 200
+  },
+  "group": "nodes",
+  "removed": false,
+  "selected": false,
+  "selectable": true,
+  "locked": false,
+  "grabbable": false,
+  "classes": ""
+}, {
+  "data": {
+    "id": "e01",
+    "weight": 0,
+    "source": "CPSC 110",
+    "target": "CPSC 210"
+  },
+  "position": {},
+  "group": "edges",
+  "removed": false,
+  "selected": false,
+  "selectable": true,
+  "locked": false,
+  "grabbable": true,
+  "classes": ""
+},
+  {
+    "data": {
+      "id": "e04",
+      "weight": 0,
+      "source": "CPSC 121",
+      "target": "CPSC 221"
+    },
+    "position": {},
+    "group": "edges",
+    "removed": false,
+    "selected": false,
+    "selectable": true,
+    "locked": false,
+    "grabbable": true,
+    "classes": ""
+  },
+  {
+    "data": {
+      "id": "e05",
+      "weight": 0,
+      "source": "CPSC 210",
+      "target": "CPSC 310"
+    },
+    "position": {},
+    "group": "edges",
+    "removed": false,
+    "selected": false,
+    "selectable": true,
+    "locked": false,
+    "grabbable": true,
+    "classes": ""
+  },
+  {
+    "data": {
+      "id": "e06",
+      "weight": 0,
+      "source": "CPSC 221",
+      "target": "CPSC 310"
+    },
+    "position": {},
+    "group": "edges",
+    "removed": false,
+    "selected": false,
+    "selectable": true,
+    "locked": false,
+    "grabbable": true,
+    "classes": "unbundled-bezier"
+  }]
