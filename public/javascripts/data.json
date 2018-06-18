@@ -1,177 +1,231 @@
-[{
-  "data": {
-    "id": "CPSC 110",
-    "weight": 0
+{
+  "CPSC103": {
+    "prereqs": [],
+    "year": 1
   },
-  "position": {
-    "x": 50,
-    "y": 100
+  "CPSC107": {
+    "prereqs": [
+      {"course": "CPSC103"}
+    ],
+    "year": 1
   },
-  "group": "nodes",
-  "removed": false,
-  "selected": false,
-  "selectable": true,
-  "locked": false,
-  "grabbable": false,
-  "classes": ""
-}, {
-  "data": {
-    "id": "CPSC 210",
-    "weight": 23
+  "CPSC110": {
+    "prereqs": [],
+    "year": 1
   },
-  "position": {
-    "x": 100,
-    "y": 75
+  "CPSC121": {
+    "prereqs": [
+      {"course": "CPSC107"},
+      {"course": "CPSC110"}
+    ],
+    "year": 1
   },
-  "group": "nodes",
-  "removed": false,
-  "selected": false,
-  "selectable": true,
-  "locked": false,
-  "grabbable": false,
-  "classes": ""
-}, {
-  "data": {
-    "id": "CPSC 310",
-    "weight": 0
+  "CPSC210": {
+    "prereqs": [
+      {"course": "CPSC107"},
+      {"course": "CPSC110"},
+      {"course": "CPSC260"}
+    ],
+    "year": 2
   },
-  "position": {
-    "x": 150,
-    "y": 100
+  "CPSC213": {
+    "prereqs": [
+      {"course": "CPSC121"},
+      {"course": "CPSC210"}
+    ],
+    "year": 2
   },
-  "group": "nodes",
-  "removed": false,
-  "selected": false,
-  "selectable": true,
-  "locked": false,
-  "grabbable": false,
-  "classes": ""
-}, {
-  "data": {
-    "id": "CPSC 121",
-    "weight": 50
+  "CPSC221": {
+    "prereqs": [
+      {"all": [
+        {"any": [
+          {"course": "CPSC210"},
+          {"course": "EECE210"},
+          {"course": "CPEN221"}
+        ]},
+        {"any": [
+          {"course": "CPSC121"},
+          {"course": "MATH220"}
+        ]}
+      ]}
+    ],
+    "year": 2
   },
-  "position": {
-    "x": 50,
-    "y": 200
+  "CPSC304": {
+    "prereqs": [
+      {"course": "CPSC221"},
+      {"all": [
+        {"all": [
+          {"course": "CPSC260"},
+          {"course": "EECE320"}
+        ]},
+        {"any": [
+          {"course": "CPSC210"},
+          {"course": "EECE210"},
+          {"course": "EECE309"}
+        ]}
+      ]}
+    ],
+    "year": 3
   },
-  "group": "nodes",
-  "removed": false,
-  "selected": false,
-  "selectable": true,
-  "locked": false,
-  "grabbable": false,
-  "classes": ""
-}, {
-  "data": {
-    "id": "CPSC 221",
-    "weight": 60
+  "CPSC310": {
+    "prereqs": [
+      {"course": "CPSC210"}
+    ],
+    "year": 3
   },
-  "position": {
-    "x": 100,
-    "y": 225
+  "CPSC313": {
+    "prereqs": [
+      {"all": [
+        {"course": "CPSC213"},
+        {"course": "CPSC221"}
+      ]},
+      {"all": [
+        {"course": "CPSC210"},
+        {"course": "CPSC213"},
+        {"course": "CPSC260"},
+        {"course": "EECE320"}
+      ]}
+    ],
+    "year": 3
   },
-  "group": "nodes",
-  "removed": false,
-  "selected": false,
-  "selectable": true,
-  "locked": false,
-  "grabbable": false,
-  "classes": ""
-},{
-  "data": {
-    "id": "CPSC 213",
-    "weight": 60
+  "CPSC317": {
+    "prereqs": [
+      {"all": [
+        {"course": "CPSC213"},
+        {"course": "CPSC221"}
+      ]}
+    ],
+    "year": 3
   },
-  "position": {
-    "x": 100,
-    "y": 150
+  "CPSC319": {
+    "prereqs": [
+      {"course": "CPSC310"}
+    ],
+    "year": 3
   },
-  "group": "nodes",
-  "removed": false,
-  "selected": false,
-  "selectable": true,
-  "locked": false,
-  "grabbable": false,
-  "classes": ""
+  "CPSC320": {
+    "prereqs": [
+      {"course": "CPSC221"},
+      {"all": [
+        {"course": "CPSC260"},
+        {"course": "EECE320"}
+      ]}
+    ],
+    "year": 3
+  },
+  "CPSC322": {
+    "prereqs": [
+      {"course": "CPSC221"},
+      {"all": [
+        {"all": [
+          {"course": "CPSC260"},
+          {"course": "EECE320"}
+        ]},
+        {"any": [
+          {"course": "CPSC210"},
+          {"course": "EECE210"},
+          {"course": "EECE309"}
+        ]}
+      ]}
+    ],
+    "year": 3
+  },
+  "CPSC340": {
+    "prereqs": [
+      {"course": "CPSC210"} // Kill me lmao
+    ],
+    "year": 3
+  },
+  "CPSC344": {
+    "prereqs": [
+      {"course": "CPSC210"},
+      {"course": "EECE210"},
+      {"course": "EECE309"},
+      {"course": "CPEN221"}
+    ],
+    "year": 3
+  },
+  "CPSC404": {
+    "prereqs": [
+      {"all": [
+        {"course": "CPSC304"},
+        {"any": [
+          {"course": "CPSC213"},
+          {"course": "CPSC261"}
+        ]}
+      ]}
+    ],
+    "year": 4
+  },
+  "CPSC410": {
+    "prereqs": [
+      {"course": "CPSC310"},
+      {"all": [
+        {"any": [
+          {"course": "EECE310"},
+          {"course": "CPEN321"}
+        ]},
+        {"any": [
+          {"course": "EECE315"},
+          {"course": "CPEN331"}
+        ]}
+      ]}
+    ],
+    "year": 4
+  },
+  "CPSC415": {
+    "prereqs": [
+      {"course": "CPSC313"},
+      {"course": "EECE315"},
+      {"course": "CPEN331"}
+    ],
+    "year": 4
+  },
+  "CPSC416": {
+    "prereqs": [
+      {"all": [
+        {"any": [
+          {"course": "CPSC313"},
+          {"course": "EECE315"},
+          {"course": "CPEN331"}
+        ]},
+        {"any": [
+          {"course": "CPSC317"},
+          {"course": "EECE358"},
+          {"course": "ELEC331"}
+        ]}
+      ]}
+    ],
+    "year": 4
+  },
+  "CPSC418": {
+    "prereqs": [
+      {"all": [
+        {"any": [
+          {"course": "CPSC261"},
+          {"course": "CPSC313"},
+          {"course": "EECE476"},
+          {"course": "CPEN411"}
+        ]},
+        {"any": [
+          {"course": "CPSC320"},
+          {"course": "EECE320"}
+        ]}
+      ]}
+    ],
+    "year": 4
+  },
+  "CPSC420": {
+    "prereqs": [
+      {"course": "CPSC320"}
+    ],
+    "year": 4
+  },
+  "CPSC422": {
+    "prereqs": [
+      {"course": "CPSC322"}
+    ],
+    "year": 4
+  }
 }
-, {
-  "data": {
-    "id": "CPSC 320",
-    "weight": 60
-  },
-  "position": {
-    "x": 150,
-    "y": 200
-  },
-  "group": "nodes",
-  "removed": false,
-  "selected": false,
-  "selectable": true,
-  "locked": false,
-  "grabbable": false,
-  "classes": ""
-}, {
-  "data": {
-    "id": "e01",
-    "weight": 0,
-    "source": "CPSC 110",
-    "target": "CPSC 210"
-  },
-  "position": {},
-  "group": "edges",
-  "removed": false,
-  "selected": false,
-  "selectable": true,
-  "locked": false,
-  "grabbable": true,
-  "classes": ""
-},
-  {
-    "data": {
-      "id": "e04",
-      "weight": 0,
-      "source": "CPSC 121",
-      "target": "CPSC 221"
-    },
-    "position": {},
-    "group": "edges",
-    "removed": false,
-    "selected": false,
-    "selectable": true,
-    "locked": false,
-    "grabbable": true,
-    "classes": ""
-  },
-  {
-    "data": {
-      "id": "e05",
-      "weight": 0,
-      "source": "CPSC 210",
-      "target": "CPSC 310"
-    },
-    "position": {},
-    "group": "edges",
-    "removed": false,
-    "selected": false,
-    "selectable": true,
-    "locked": false,
-    "grabbable": true,
-    "classes": ""
-  },
-  {
-    "data": {
-      "id": "e06",
-      "weight": 0,
-      "source": "CPSC 221",
-      "target": "CPSC 310"
-    },
-    "position": {},
-    "group": "edges",
-    "removed": false,
-    "selected": false,
-    "selectable": true,
-    "locked": false,
-    "grabbable": true,
-    "classes": "unbundled-bezier"
-  }]
