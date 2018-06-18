@@ -1,4 +1,4 @@
-[ // the stylesheet for the graph
+[
   {
     "selector": "node",
     "style": {

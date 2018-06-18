@@ -133,7 +133,7 @@
   },
   "CPSC340": {
     "prereqs": [
-      {"course": "CPSC210"} // Kill me lmao
+      {"course": "CPSC210"}
     ],
     "year": 3
   },
