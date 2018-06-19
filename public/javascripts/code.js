@@ -1,3 +1,4 @@
+
 var params = {
     "y-start-1": 50,
     "y-start-2": 350,
@@ -35,6 +36,44 @@ Promise.all([
 
             style: dataArray[0]
         });
+
+        $(document).ready(function(){
+            cy.$('node').qtip({
+                content: {
+                    text: function(event, api) {
+                        let id = this.id;
+                        $.ajax({
+                            url: '/tooltip/' + this._private.data.id, // URL to the JSON file
+                            type: 'GET', // POST or GET
+                            dataType: 'json', // Tell it we're retrieving JSON
+                        }).then(function(data) {
+                            /* Process the retrieved JSON object
+                             *    Retrieve a specific attribute from our parsed
+                             *    JSON string and set the tooltip content.
+                             */
+
+                            // Now we set the content manually (required!)
+
+                            api.set('content.text', "<b>" + data.content + "</b>");
+                        }, function(xhr, status, error) {
+                            // Upon failure... set the tooltip content to the status and error value
+                            api.set('content.text', status + ': ' + error);
+                        });
+                        return 'Loading...'; // Set some initial loading text
+                    }
+                },
+                position: {
+                    my: 'top center',
+                    at: 'bottom center'
+                },
+                style: {
+                    classes: 'qtip-bootstrap',
+                    tip: {
+                        width: 16,
+                        height: 8
+                    }
+                }
+            })});
 
         function init(data) {
             var final = [];
@@ -85,6 +124,7 @@ Promise.all([
             });
             if (good) {
                 node.select();
+
                 node.connectedEdges("[source = \"" + node.id() + "\"]").forEach(function(current, i, all) {
                     current.select();
                 })

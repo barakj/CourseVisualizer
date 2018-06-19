@@ -2,7 +2,7 @@
   {
     "selector": "node",
     "style": {
-      "background-color": "#c9c9c9",
+      "background-color": "#6666ff",
       "label": "data(id)"
     }
   },
@@ -12,15 +12,15 @@
     "style": {
       "curve-style": "bezier",
       "width": 3,
-      "line-color": "#fff1f1",
-      "target-arrow-color": "#fff1f1",
+      "line-color": "#f2f2f2",
+      "target-arrow-color": "#f2f2f2",
       "target-arrow-shape": "triangle"
     }
   },
   {
     "selector": "node:selected",
     "style": {
-      "background-color": "#646464",
+      "background-color": "#00ff99",
       "label": "data(id)"
     }
   },
