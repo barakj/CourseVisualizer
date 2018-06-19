@@ -1,19 +1,38 @@
-[{
-  "selector": "edge.unbundled-bezier",
-  "style": {
-    "curve-style": "unbundled-bezier",
-    "control-point-distances": 120,
-    "control-point-weights": 0.1
-  }
-}, {
+[
+  {
     "selector": "node",
     "style": {
-      "height": 5,
-      "width": 5,
-      "background-color": "#FE6A4A",
-      "label": "data(id)",
-      "shape": "roundrectangle",
-      "text-valign": "center",
-      "text-halign": "center"
+      "background-color": "#6666ff",
+      "label": "data(id)"
     }
-  }]
+  },
+
+  {
+    "selector": "edge",
+    "style": {
+      "curve-style": "bezier",
+      "width": 3,
+      "line-color": "#f2f2f2",
+      "target-arrow-color": "#f2f2f2",
+      "target-arrow-shape": "triangle"
+    }
+  },
+  {
+    "selector": "node:selected",
+    "style": {
+      "background-color": "#00ff99",
+      "label": "data(id)"
+    }
+  },
+
+  {
+    "selector": "edge:selected",
+    "style": {
+      "curve-style": "bezier",
+      "width": 3,
+      "line-color": "#cc2c2d",
+      "target-arrow-color": "#cc2c3f",
+      "target-arrow-shape": "triangle"
+    }
+  }
+]
