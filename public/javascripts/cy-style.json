@@ -2,8 +2,9 @@
   {
     "selector": "node",
     "style": {
-      "background-color": "#6666ff",
-      "label": "data(id)"
+      "background-color": "#74bef7",
+      "label": "data(id)",
+      "color": "#fff"
     }
   },
 
@@ -12,15 +13,15 @@
     "style": {
       "curve-style": "bezier",
       "width": 3,
-      "line-color": "#f2f2f2",
-      "target-arrow-color": "#f2f2f2",
+      "line-color": "#636363",
+      "target-arrow-color": "#636363",
       "target-arrow-shape": "triangle"
     }
   },
   {
     "selector": "node:selected",
     "style": {
-      "background-color": "#00ff99",
+      "background-color": "#FFFF99",
       "label": "data(id)"
     }
   },
@@ -29,9 +30,9 @@
     "selector": "edge:selected",
     "style": {
       "curve-style": "bezier",
-      "width": 3,
-      "line-color": "#cc2c2d",
-      "target-arrow-color": "#cc2c3f",
+      "width": 4,
+      "line-color": "#fcf4f4",
+      "target-arrow-color": "#fcf4f4",
       "target-arrow-shape": "triangle"
     }
   }
