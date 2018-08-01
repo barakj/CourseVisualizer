@@ -2,7 +2,9 @@ import csv
 import json
 import re
 
-def parse_prereqs(string):
+def parse_req(string):
+    if string.lower().count('either') > 1:
+        print('WARN (MULTI EITHER): ' + string)
     obj = split_note(string)
     if obj['main'] is not None:
         obj['main'] = split_prereq(obj['main'])
@@ -47,13 +49,14 @@ def split_and(string):
 
 def make_atom(string):
     courses = re.findall(r'[A-Z]{3,4}[ ]*[\d]{1,3}', string)
-    match = re.search(r'(all|one|two|three|four) of', string.lower())
+    courses = [x.replace(' ', '') for x in courses]
+    match = re.search(r'(all|one|two|three|four|five|six|seven) of', string.lower())
     op = None
     if match:
         op = match.group(1).lower()
     else:
         if len(courses) is not 1:
-            print("WARN: " + string)
+            print("WARN (UNEXPECTED # OF COURSES): " + string)
         else:
             op = "only"
             courses = courses
@@ -97,16 +100,23 @@ with open('data.csv', newline='') as infile:
             headerRead = True
         else:
             try:
+                p_parsed = parse_req(row[15])
+                c_parsed = parse_req(row[16])
                 objects[row[0]+row[1]] = {"dept": row[0],
-                     "id": row[1],
-                     "shortname": row[5],
-                     "longname": row[6],
-                     "description": row[7],
-                     "degree": row[12],
-                     "prereqs": parse_prereqs(row[15]),
-                     "coreqs": parse_prereqs(row[16])}
+                    "id": row[1],
+                    "shortname": row[5],
+                    "longname": row[6],
+                    "description": row[7],
+                    "degree": row[12],
+                    "prereqs": p_parsed['main'],
+                    "prereq note": p_parsed['note'],
+                    "prereq original": row[15],
+                    "coreqs": c_parsed['main'],
+                    "coreq note": c_parsed['note'],
+                    "coreq original": row[16]}
+
             except:
-                print(row)
+                print('WARN (EXCEPTION): ' + row)
 
 with open('data.json', 'w+') as outfile:
     outfile.write(json.dumps(objects, sort_keys=True, indent=4))
