@@ -3,6 +3,8 @@
     "selector": "node",
     "style": {
       "background-color": "#74bef7",
+      "width": 30,
+      "height": 30,
       "label": "data(id)",
       "color": "#fff"
     }
@@ -11,11 +13,7 @@
   {
     "selector": "edge",
     "style": {
-      "curve-style": "bezier",
-      "width": 3,
-      "line-color": "#636363",
-      "target-arrow-color": "#636363",
-      "target-arrow-shape": "triangle"
+      "display": "none"
     }
   },
   {
@@ -29,8 +27,16 @@
   {
     "selector": "edge:selected",
     "style": {
+      "display": "element"
+    }
+  },
+
+  {
+    "selector": "edge.hovered",
+    "style": {
+      "display": "element",
       "curve-style": "bezier",
-      "width": 4,
+      "width": 3,
       "line-color": "#fcf4f4",
       "target-arrow-color": "#fcf4f4",
       "target-arrow-shape": "triangle"

@@ -1,13 +1,27 @@
+let conflicting = [];
 
 var params = {
-    "y-start-1": 50,
-    "y-start-2": 350,
-    "y-start-3": 650,
-    "y-start-4": 950,
-    "x-start": 50,
-    "x-interval": 100
-}
+    "x-start-1": 50,
+    "x-interval": 300,
+    "x-start-2": 350,
+    "x-start-3": 650,
+    "x-start-4": 950,
+    "y-start": 50,
+    "y-interval": 100
+};
 
+/**
+ * paramters for the third approach for reference
+ */
+// var params = {
+//     "x-start-1": 50,
+//     "x-interval": 300,
+//     "x-start-2": 350,
+//     "x-start-3": 650,
+//     "x-start-4": 950,
+//     "y-start": 50,
+//     "y-interval": 70
+// };
 Promise.all([
     fetch('javascripts/cy-style.json', {mode: 'no-cors'})
         .then(function(res) {
@@ -35,6 +49,21 @@ Promise.all([
             },
 
             style: dataArray[0]
+        });
+
+        /**
+         * CURVING ALL CONFLICTING EDGES
+         */
+        $(document).ready(function() {
+            console.log(conflicting);
+            for(let conflictedEdge of conflicting) {
+                cy.style().selector('#' + conflictedEdge.id).style({
+                    "curve-style": "unbundled-bezier",
+                    "control-point-distances": 50 * conflictedEdge.dir,
+                    "control-point-weights": 0.5
+                }).update();
+            }
+
         });
 
         $(document).ready(function(){
@@ -76,19 +105,71 @@ Promise.all([
             })});
 
         function init(data) {
-            var final = [];
-            var counts = [0, 0, 0, 0];
-            for (var node in data) {
-                var obj = {};
+            let createdNodes = {};
+            let final = [];
+            let counts = [0, 0, 0, 0];
+            let coursesByYear = [[],[],[],[],[]];
+
+            //only use if third approach
+            // let locationByCourseCode = getYForNodes(data);
+
+            for (let node in data) {
+                let obj = {};
+                let year = data[node].year;
                 obj.data = {id:node};
                 obj.selected = false;
+
+                //first option
                 obj.position = {
-                    x: params["y-start-" + data[node].year],
-                    y: params["x-start"] + params["x-interval"] * counts[data[node].year - 1]
+                    x: params["x-start-" + year],
+                    y: params["y-start"] + params["y-interval"] * counts[year - 1]
                 };
-                counts[data[node].year - 1]++;
+
+                //third option
+                // let courseCode = node.slice(-2);
+                // obj.position = {
+                //     x: params["x-start-" + year],
+                //     y: locationByCourseCode[courseCode]
+                // };
+
+                counts[year - 1]++;
+                coursesByYear[year - 1].push(node);
                 final.push(obj);
-                for (var prereq of getAllPrereqs(data[node].prereqs)) {
+                createdNodes[node] = obj;
+                console.log(createdNodes);
+                for (let prereq of getAllPrereqs(data[node].prereqs)) {
+                    //need to check whether prereq -> node would intersect an existing node
+                    if(createdNodes[prereq]) {
+                        let testX = (createdNodes[prereq].position.x + obj.position.x) / 2;
+                        let testY = (createdNodes[prereq].position.y + obj.position.y) / 2;
+                        if ((testX - params["x-start-1"]) % params["x-interval"] === 0) {
+                            //if got here, could be intersecting
+                            console.log(node + " and " + prereq + " might be intersecting a node");
+                            //figure out which year the intersected node could be part of
+                            let courseYear = 0;
+                            let copyX = testX;
+                            while (copyX > params["x-start-1"]) {
+                                copyX -= params["x-interval"];
+                                courseYear++;
+                            }
+
+                            //now, iterate over all the nodes that could be intersected based on the year.
+                            //for each node, check whether the y value of the source and target nodes average overlaps the node.
+                            for(let current of coursesByYear[courseYear]) {
+                                let middleOfNode = createdNodes[current].position.y;
+                                //TODO: get half the size of the node's height without using a hardcoded value
+                                //TODO: the greater the Y difference, the greater the pull should be (not just 1,-1)
+                                if(isInCircle(testY, middleOfNode,15)){
+                                    //if got here, edge from source to target overlaps an existing node.
+                                    //add the conflicting edge to the array and decide on direction of curve (-1 or 1).
+                                    conflicting.push({id:prereq + node, dir:(createdNodes[prereq].position.y  >= testY ? 1 : -1)});
+                                } else if(createdNodes[prereq].position.x === testX) {
+                                    //if got here, same x coordinates so definitely intersecting nodes.
+                                    conflicting.push({id:prereq + node, dir:1});
+                                }
+                            }
+                        }
+                    }
                     final.push({data:{id: prereq + node, target: node, source: prereq}, group:"edges"});
                 }
             }
@@ -96,10 +177,34 @@ Promise.all([
             return final;
         }
 
+        /**
+         * method to check whether a certain y value intersects a circle centered at some other y value.
+         * @param y the y value of the point to test
+         * @param yMiddle the y value of the center of the circle
+         * @param radius the radius of the circle
+         * @returns {boolean}
+         */
+        function isInCircle(y, yCenter, radius) {
+            let bottom = yCenter + radius;
+            let top = yCenter - radius;
+            return y >= top && y <= bottom;
+        }
+
+        function getYForNodes(data) {
+            let val = params["y-start"];
+            let final = {};
+            let map = [... new Set(Object.keys(data).map((x) => {return x.slice(-2)}).sort())];
+            for (let key of map) {
+                final[key] = val;
+                val += params["y-interval"];
+            }
+            return final;
+        }
+
         function getAllPrereqs(arr) {
-            var final = [];
-            for (var option of arr) {
-                var key = Object.keys(option)[0];
+            let final = [];
+            for (let option of arr) {
+                let key = Object.keys(option)[0];
                 if (key === "course") {
                     final.push(option[key]);
                 } else {
@@ -110,12 +215,12 @@ Promise.all([
         }
 
         cy.on('cxttap', 'node', function(evt){
-            var node = evt.target;
+            let node = evt.target;
             attemptSelection(node);
         });
 
         function attemptSelection(node) {
-            var good = true;
+            let good = true;
             node.connectedEdges("[target = \"" + node.id() + "\"]").forEach(function(current, i, all) {
                 console.log(current.id());
                 if (!current.selected()) {
@@ -124,11 +229,29 @@ Promise.all([
             });
             if (good) {
                 node.select();
-
                 node.connectedEdges("[source = \"" + node.id() + "\"]").forEach(function(current, i, all) {
                     current.select();
                 })
             }
         }
+
+        cy.on('mouseover', 'node', function (evt) {
+            let node = evt.target;
+            hoverBack(node);
+        });
+
+        cy.on('mouseout', 'node', function (evt) {
+            let node = evt.target;
+            unHoverBack(node);
+        });
+
+        function unHoverBack(node) {
+            node.predecessors('edge').removeClass('hovered');
+        }
+
+        function hoverBack(node) {
+            node.predecessors('edge').addClass('hovered');
+        }
+
     });
 

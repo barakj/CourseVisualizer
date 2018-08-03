@@ -54,6 +54,7 @@
   "CPSC304": {
     "prereqs": [
       {"course": "CPSC221"},
+      {"course": "CPSC121"},
       {"all": [
         {"all": [
           {"course": "CPSC260"},
@@ -140,6 +141,7 @@
   "CPSC344": {
     "prereqs": [
       {"course": "CPSC210"},
+      {"course": "CPSC304"},
       {"course": "EECE210"},
       {"course": "EECE309"},
       {"course": "CPEN221"}
@@ -160,7 +162,8 @@
   },
   "CPSC410": {
     "prereqs": [
-      {"course": "CPSC310"},
+      {"course": "CPSC213"},
+      {"course": "CPSC210"},
       {"all": [
         {"any": [
           {"course": "EECE310"},
@@ -176,7 +179,7 @@
   },
   "CPSC415": {
     "prereqs": [
-      {"course": "CPSC313"},
+      {"course": "CPSC210"},
       {"course": "EECE315"},
       {"course": "CPEN331"}
     ],
@@ -210,6 +213,7 @@
         ]},
         {"any": [
           {"course": "CPSC320"},
+          {"course": "CPSC210"},
           {"course": "EECE320"}
         ]}
       ]}
