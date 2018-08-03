@@ -1,11 +1,13 @@
 
 var params = {
-    "y-start-1": 50,
-    "y-start-2": 350,
-    "y-start-3": 650,
-    "y-start-4": 950,
-    "x-start": 50,
-    "x-interval": 100
+    "x-start-1": 50,
+    "x-start-2": 350,
+    "x-start-3": 650,
+    "x-start-4": 950,
+    "x-start-5": 1250,
+    "x-start-6": 1550,
+    "y-start": 50,
+    "y-interval": 100
 }
 
 Promise.all([
@@ -25,13 +27,17 @@ Promise.all([
             boxSelectionEnabled: false,
             autounselectify: false,
             autoungrabify: true,
-            maxZoom: 2,
+            maxZoom: 1.5,
             minZoom: 0.5,
+            wheelSensitivity: 0.5,
 
             elements: init(dataArray[1]),
 
             layout: {
-                name: 'preset'
+                name: 'preset',
+                fit: false,
+                pan: { x: 200, y: 0 },
+                zoom: 1.5
             },
 
             style: dataArray[0]
@@ -77,41 +83,75 @@ Promise.all([
 
         function init(data) {
             var final = [];
-            var counts = [0, 0, 0, 0];
-            for (var node in data) {
-                var obj = {};
-                obj.data = {id:node};
-                obj.selected = false;
-                obj.position = {
-                    x: params["y-start-" + data[node].year],
-                    y: params["x-start"] + params["x-interval"] * counts[data[node].year - 1]
-                };
-                counts[data[node].year - 1]++;
-                final.push(obj);
-                for (var prereq of getAllPrereqs(data[node].prereqs)) {
-                    final.push({data:{id: prereq + node, target: node, source: prereq}, group:"edges"});
+            var counts = [0, 0, 0, 0, 0, 0];
+            for (var course in data) {
+                if (course.startsWith("CPSC") && data[course].degree === 'U') {
+                    var node = {};
+                    let year = data[course].id[0];
+                    node.data = {id: course, name: course, prereqs: data[course].prereqs};
+                    node.selected = false;
+                    node.position = {
+                        x: params["x-start-" + year],
+                        y: params["y-start"] + params["y-interval"] * counts[year - 1]
+                    };
+                    counts[year - 1]++;
+                    final.push(node);
+                    if (node.data.prereqs) {
+                        final.push(...makeAllEdges(node));
+                    }
                 }
             }
-            console.log(final);
             return final;
         }
 
-        function getAllPrereqs(arr) {
-            var final = [];
-            for (var option of arr) {
-                var key = Object.keys(option)[0];
-                if (key === "course") {
-                    final.push(option[key]);
-                } else {
-                    final = final.concat(getAllPrereqs(option[key]));
-                }
+        function makeAllEdges(node) {
+            let id = node.data.id;
+            let prereqs = node.data.prereqs;
+            return makeEdgesRecursive(id, prereqs);
+        }
+
+        function makeEdgesRecursive(targetNode, prereqObj) {
+            let key = Object.keys(prereqObj)[0];
+            switch (key) {
+                case "either":
+                    return makeEdgesRecursive(targetNode, prereqObj[key][0]);
+                case "and":
+                    let final = [];
+                    for (let sub of prereqObj[key]) {
+                        final.push(...makeEdgesRecursive(targetNode, sub));
+                    }
+                    return final;
+                case "all":
+                case "only":
+                    return prereqObj[key].map((x) => {return makeEdge(targetNode, false, x)});
+                default:
+                    return prereqObj[key].map((x) => {return makeEdge(targetNode, true, x)});
             }
-            return final;
+        }
+
+        function makeEdge(targetNode, isOptional, sourceNode) {
+            let obj = {data:{id: sourceNode + targetNode, target: targetNode, source: sourceNode}, group: "edges"};
+            if (isOptional) {
+                obj.classes = "optional";
+            }
+            return obj;
         }
 
         cy.on('cxttap', 'node', function(evt){
             var node = evt.target;
             attemptSelection(node);
+        });
+
+        cy.on('mouseover', 'node', function (evt) {
+            let node = evt.target;
+            node.predecessors('edge').addClass('hovered');
+            node.outgoers('edge').addClass('hovered');
+        });
+
+        cy.on('mouseout', 'node', function (evt) {
+            let node = evt.target;
+            node.predecessors('edge').removeClass('hovered')
+            node.outgoers('edge').removeClass('hovered');
         });
 
         function attemptSelection(node) {
