@@ -43,44 +43,6 @@ Promise.all([
             style: dataArray[0]
         });
 
-        $(document).ready(function(){
-            cy.$('node').qtip({
-                content: {
-                    text: function(event, api) {
-                        let id = this.id;
-                        $.ajax({
-                            url: '/tooltip/' + this._private.data.id, // URL to the JSON file
-                            type: 'GET', // POST or GET
-                            dataType: 'json', // Tell it we're retrieving JSON
-                        }).then(function(data) {
-                            /* Process the retrieved JSON object
-                             *    Retrieve a specific attribute from our parsed
-                             *    JSON string and set the tooltip content.
-                             */
-
-                            // Now we set the content manually (required!)
-
-                            api.set('content.text', "<b>" + data.content + "</b>");
-                        }, function(xhr, status, error) {
-                            // Upon failure... set the tooltip content to the status and error value
-                            api.set('content.text', status + ': ' + error);
-                        });
-                        return 'Loading...'; // Set some initial loading text
-                    }
-                },
-                position: {
-                    my: 'top center',
-                    at: 'bottom center'
-                },
-                style: {
-                    classes: 'qtip-bootstrap',
-                    tip: {
-                        width: 16,
-                        height: 8
-                    }
-                }
-            })});
-
         function init(data) {
             var final = [];
             var counts = [0, 0, 0, 0, 0, 0];
@@ -88,7 +50,15 @@ Promise.all([
                 if (course.startsWith("CPSC") && data[course].degree === 'U') {
                     var node = {};
                     let year = data[course].id[0];
-                    node.data = {id: course, name: course, prereqs: data[course].prereqs};
+                    node.data = {
+                        id: course,
+                        name: course,
+                        prereqs: data[course].prereqs,
+                        prereqString: data[course]["prereq original"],
+                        shortname: data[course]["shortname"],
+                        longname: data[course]["longname"],
+                        description: data[course]["description"],
+                    };
                     node.selected = false;
                     node.position = {
                         x: params["x-start-" + year],
@@ -153,6 +123,24 @@ Promise.all([
             node.predecessors('edge').removeClass('hovered')
             node.outgoers('edge').removeClass('hovered');
         });
+
+        cy.on('click', 'node', function (evt) {
+            let node = evt.target;
+            let prereqs = node._private.data.prereqString !== null ? node._private.data.prereqString : "None"
+            $('#overlay').show().on('click', hideOverlay);
+            $('body').prepend(`<div id="popup"></div>`);
+            let popup = $('#popup');
+            popup.append(`<h2>${node._private.data.name}</h2>`)
+                .append(`<h3>${node._private.data.longname}</h3>`)
+                .append(`<p>Description: ${node._private.data.description}</p>`)
+                .append(`<p>Prerequisits: ${prereqs}</p>`)
+                .append(`<p>Dropdowns and such down here, but that will take more time</p>`)
+        });
+
+        function hideOverlay() {
+            $('#overlay').off('click', hideOverlay).hide();
+            $('#popup').remove();
+        }
 
         function attemptSelection(node) {
             var good = true;
