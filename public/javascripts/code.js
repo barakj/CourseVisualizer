@@ -22,7 +22,7 @@ Promise.all([
 ])
     .then(function(dataArray) {
         var cy = window.cy = cytoscape({
-            container: document.getElementById('main2'),
+            container: document.getElementById('main'),
 
             boxSelectionEnabled: false,
             autounselectify: false,
@@ -36,7 +36,7 @@ Promise.all([
             layout: {
                 name: 'preset',
                 fit: false,
-                pan: { x: 200, y: 0 },
+                pan: { x: 100, y: 0 },
                 zoom: 1.5
             },
 
@@ -126,9 +126,9 @@ Promise.all([
 
         cy.on('click', 'node', function (evt) {
             let node = evt.target;
-            let prereqs = node._private.data.prereqString !== null ? node._private.data.prereqString : "None"
+            let prereqs = (node._private.data.prereqString !== null) ? node._private.data.prereqString : "None";
             $('#overlay').show().on('click', hideOverlay);
-            $('body').prepend(`<div id="popup"></div>`);
+            $('#main').prepend(`<div id="popup"></div>`);
             let popup = $('#popup');
             popup.append(`<h2>${node._private.data.name}</h2>`)
                 .append(`<h3>${node._private.data.longname}</h3>`)
@@ -160,3 +160,8 @@ Promise.all([
         }
     });
 
+$(document).ready(function () {
+    $('#department-button').on('click', function () {
+        console.log($('#department-select').val());
+    })
+})
