@@ -14,14 +14,32 @@
     <style>
     </style>
 </head>
-<body id="main" class="loading dev" data-tabs="plain,courses,rooms">
-<div id="overlay"></div>
-<div id="main2" style="height:100vh;width:100vw;">
+<body>
 
 
+<div id="main">
+    <div id="cyto"></div>
+    <div id="overlay"></div>
 </div>
-<div class="tooltiptext" style="display:none">
-    Complex <b>inline</b> <i>HTML</i> in your <u>config</u>
+<div id="sidebar">
+    <div id="scrolly-boi"> <!-- I don't know why the hell we need this but we do -->
+        <div id="sidebar-content">
+            <h1>Some Header</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+            <h3>Choose a department</h3>
+            <select id="department-select">
+                <option value="CPSC" selected>CPSC</option>
+                <option value="MATH">MATH</option>
+            </select>
+            <br><br>
+            <button id="department-button">Select</button>
+            <br><br>
+            <h3>Some Other Header</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent vitae lorem ac tellus interdum posuere non eget augue. Morbi at sem vel purus condimentum dictum. Aenean dapibus ligula id eros ornare tincidunt. Vestibulum iaculis congue ipsum, nec vulputate tellus dapibus eu. Curabitur id nulla maximus, porttitor elit eu, faucibus justo. Sed id lacus in erat auctor iaculis. Nulla sed nibh finibus, varius leo eu, pharetra ante. In sed ante felis. Curabitur rutrum non lacus in finibus. Mauris fermentum malesuada tempor. Nam mollis leo sed dictum euismod. In tortor purus, egestas nec congue non, pharetra a magna. Integer egestas felis in tincidunt euismod.
+
+                In eleifend eros ac sem mattis, vitae aliquet nisl fermentum. Aenean quis tortor nec lacus tristique laoreet id vitae magna. Suspendisse potenti. Vivamus ex dui, dapibus in dolor vel, consequat posuere tortor. Vestibulum dapibus massa eget mauris lobortis vulputate. Fusce et massa quis ipsum pulvinar imperdiet et ac tellus. Suspendisse mollis tristique aliquam. Phasellus volutpat justo a eros egestas, iaculis luctus odio posuere.</p>
+        </div>
+    </div>
 </div>
 <script type="text/javascript" src="javascripts/code.js"></script>
 
