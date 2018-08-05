@@ -90,7 +90,7 @@ def split_note(string):
         return {"main": string, "note": None}
 
 
-objects = {}
+objects = {"depts": [], "courses": {}}
 
 with open('data.csv', newline='') as infile:
     reader = csv.reader(infile)
@@ -102,7 +102,10 @@ with open('data.csv', newline='') as infile:
             try:
                 p_parsed = parse_req(row[15])
                 c_parsed = parse_req(row[16])
-                objects[row[0]+row[1]] = {"dept": row[0],
+                dept = row[0]
+                if dept not in objects["depts"]:
+                    objects["depts"].append(dept)
+                objects["courses"][row[0]+row[1]] = {"dept": row[0],
                     "id": row[1],
                     "shortname": row[5],
                     "longname": row[6],

@@ -1,6 +1,6 @@
 let globalData;
 let globalStyle;
-
+let defaultDept = "CPSC";
 
 /**
  * APPROACHES OF VISUALIZATION/SPACING
@@ -67,6 +67,16 @@ Promise.all([
     .then(function(dataArray) {
         globalData = dataArray[1];
         globalStyle = dataArray[0];
+        $(document).ready(function () {
+            let select = $('#department-select');
+            for (let dept of globalData["depts"]) {
+                if (dept === defaultDept) {
+                    select.append(`<option value="${dept}" selected>${dept}</option>`);
+                } else {
+                    select.append(`<option value="${dept}">${dept}</option>`);
+                }
+            }
+        })
     });
 
 $(document).ready(function () {
@@ -115,14 +125,22 @@ $(document).ready(function () {
 
         cy.on('mouseover', 'node', function (evt) {
             let node = evt.target;
-            node.predecessors('edge').addClass('hovered');
-            node.outgoers('edge').addClass('hovered');
+            if ($('#pre-cascade').prop('checked')) {
+                node.predecessors('edge').addClass('hovered');
+            } else {
+                node.incomers('edge').addClass('hovered');
+            }
+            if ($('#post-cascade').prop('checked')) {
+                node.successors('edge').addClass('hovered');
+            } else {
+                node.outgoers('edge').addClass('hovered');
+            }
         });
 
         cy.on('mouseout', 'node', function (evt) {
             let node = evt.target;
             node.predecessors('edge').removeClass('hovered')
-            node.outgoers('edge').removeClass('hovered');
+            node.successors('edge').removeClass('hovered');
         });
 
         cy.on('click', 'node', function (evt) {
@@ -161,19 +179,19 @@ $(document).ready(function () {
 
         //only use if third approach
         //let locationByCourseCode = getYForNodes(data)
-
-        for (var course in globalData) {
-            if (course.startsWith(dept) && globalData[course].degree === 'U') {
+        let courses = globalData["courses"];
+        for (var course in courses) {
+            if (course.startsWith(dept) && courses[course].degree === 'U') {
                 var node = {};
-                let year = globalData[course].id[0];
+                let year = courses[course].id[0];
                 node.data = {
                     id: course,
                     name: course,
-                    prereqs: globalData[course].prereqs,
-                    prereqString: globalData[course]["prereq original"],
-                    shortname: globalData[course]["shortname"],
-                    longname: globalData[course]["longname"],
-                    description: globalData[course]["description"],
+                    prereqs: courses[course].prereqs,
+                    prereqString: courses[course]["prereq original"],
+                    shortname: courses[course]["shortname"],
+                    longname: courses[course]["longname"],
+                    description: courses[course]["description"],
                 };
                 node.selected = false;
 
