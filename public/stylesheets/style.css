@@ -56,20 +56,20 @@ body {
   z-index: 30;
 }
 
-.title {
+#title {
   line-height: normal;
   margin: 0;
   padding: 16px;
   height: 200px;
 }
 
-.text {
+#text {
   border-top: 1px solid rgba(0,0,0,.1);
   padding: 16px;
   height: 400px;
 }
 
-.action {
+#action {
   padding: 16px;
   border-top: 1px solid rgba(0,0,0,.1);
 }
