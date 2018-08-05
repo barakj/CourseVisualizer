@@ -130,11 +130,21 @@ Promise.all([
             $('#overlay').show().on('click', hideOverlay);
             $('body').prepend(`<div id="popup"></div>`);
             let popup = $('#popup');
-            popup.append(`<h2>${node._private.data.name}</h2>`)
-                .append(`<h3>${node._private.data.longname}</h3>`)
-                .append(`<p>Description: ${node._private.data.description}</p>`)
-                .append(`<p>Prerequisits: ${prereqs}</p>`)
-                .append(`<p>Dropdowns and such down here, but that will take more time</p>`)
+            popup.append(`<div class="card">
+            <div class="title">
+                <h2>${node._private.data.name}</h2>
+                <h3>${node._private.data.longname}</h3>
+            </div>
+            <div class="text">
+                ${node._private.data.description} <br> <br>
+                ${prereqs} <br> <br>
+                more stuff
+            </div>
+
+            <div class="action">
+                actions
+            </div>
+        </div>`);
         });
 
         function hideOverlay() {
