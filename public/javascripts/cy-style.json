@@ -8,19 +8,25 @@
       "height": "label",
       "text-halign": "center",
       "text-valign": "center",
-      "text-outline-color": "#333333",
       "text-outline-opacity": 1,
       "text-outline-width": 1,
       "padding": 7,
-      "color": "#fff",
+      "color": "#ffffff",
       "shape": "roundrectangle"
     }
   },
 
   {
-    "selector": "node:selected",
+    "selector": "node.available",
     "style": {
-      "background-color": "#FFFF99"
+      "color": "#69ce63"
+    }
+  },
+
+  {
+    "selector": "node.enabled",
+    "style": {
+      "background-color": "#53ba4c"
     }
   },
 
@@ -37,21 +43,17 @@
   },
 
   {
-    "selector": "edge:selected",
+    "selector": "edge.enabled",
     "style": {
-      "display": "element"
+      "line-color": "#53ba4c",
+      "target-arrow-color": "#53ba4c"
     }
   },
 
   {
     "selector": "edge.hovered",
     "style": {
-      "display": "element",
-      "curve-style": "bezier",
-      "width": 3,
-      "line-color": "#fcf4f4",
-      "target-arrow-color": "#fcf4f4",
-      "target-arrow-shape": "triangle"
+      "display": "element"
     }
   },
 
