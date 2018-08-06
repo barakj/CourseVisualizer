@@ -89,7 +89,7 @@ $(document).ready(function () {
             container: document.getElementById('cyto'),
 
             boxSelectionEnabled: false,
-            autounselectify: false,
+            autounselectify: true,
             autoungrabify: true,
             maxZoom: 1.5,
             minZoom: 0.5,
@@ -120,7 +120,11 @@ $(document).ready(function () {
 
         cy.on('cxttap', 'node', function(evt){
             var node = evt.target;
-            attemptSelection(node);
+            if (node.hasClass('enabled')) {
+                attemptDisable(node);
+            } else {
+                attemptEnable(node);
+            }
         });
 
         cy.on('mouseover', 'node', function (evt) {
@@ -194,7 +198,9 @@ $(document).ready(function () {
                     description: courses[course]["description"],
                 };
                 node.selected = false;
-
+                if (!node.data.prereqs) {
+                    node.classes = "available";
+                }
                 //first appraoch
                 node.position = {
                     x: params["x-start-" + year],
@@ -225,21 +231,93 @@ $(document).ready(function () {
         $('#popup').remove();
     }
 
-    function attemptSelection(node) {
-        var good = true;
-        node.connectedEdges("[target = \"" + node.id() + "\"]").forEach(function(current, i, all) {
-            console.log(current.id());
-            if (!current.selected()) {
-                good = false;
+    function attemptEnable(node) {
+        if (node.hasClass('available')) {
+            enable(node);
+        }
+    }
+
+    function attemptDisable(node) {
+        disable(node);
+    }
+
+    function enable(node) {
+        node.addClass('enabled');
+        node.removeClass('available');
+        node.outgoers('edge').addClass('enabled');
+        let outNodes = node.outgoers('node');
+        outNodes.forEach(function (out) {
+            let prereqs = out._private.data.prereqs;
+            let enabled = out.incomers('node.enabled').map((x) => {return x._private.data.id});
+            if (!out.hasClass('enabled') && meetsPrereqs(prereqs, enabled)) {
+                out.addClass('available');
+            }
+        })
+    }
+
+    function disable(node) {
+        node.removeClass('enabled');
+        node.removeClass('available');
+        if (meetsPrereqs(getPrereqs(node), enabledIn(node))) {
+            node.addClass('available');
+        }
+        node.outgoers('edge').removeClass('enabled');
+        node.outgoers('node').forEach(function (out) {
+            if (!meetsPrereqs(getPrereqs(out), enabledIn(out))) {
+                disable(out);
             }
         });
-        if (good) {
-            node.select();
+    }
 
-            node.connectedEdges("[source = \"" + node.id() + "\"]").forEach(function(current, i, all) {
-                current.select();
-            })
+    function meetsPrereqs(ruleObj, enabled) {
+        if (ruleObj === null) {
+            return true;
         }
+        let rule = Object.keys(ruleObj)[0];
+        switch (rule) {
+            case "either":
+                return meetsPrereqs(ruleObj[rule], enabled); // TODO SUPPORT EITHER SELECTIONS
+            case "and":
+                for (let sub of ruleObj[rule]) {
+                    if (!meetsPrereqs(sub, enabled)) {
+                        return false;
+                    }
+                }
+                return true;
+            case "all":
+            case "only":
+                for (let course of ruleObj[rule]) {
+                    if (!enabled.includes(course)) {
+                        return false;
+                    }
+                }
+                return true;
+            case "one":
+                return memberCount(ruleObj[rule], enabled) >= 1;
+            case "two":
+                return memberCount(ruleObj[rule], enabled) >= 2;
+            case "three":
+                return memberCount(ruleObj[rule], enabled) >= 3;
+            case "four":
+                return memberCount(ruleObj[rule], enabled) >= 4;
+            case "five":
+                return memberCount(ruleObj[rule], enabled) >= 5;
+            case "six":
+                return memberCount(ruleObj[rule], enabled) >= 6;
+            case "seven":
+                return memberCount(ruleObj[rule], enabled) >= 7;
+
+        }
+    }
+
+    function memberCount(targets, actual) {
+        let count = 0;
+        for (let x of actual) {
+            if (targets.includes(x)) {
+                count++;
+            }
+        }
+        return count;
     }
 
     function makeAllEdges(node) {
@@ -350,4 +428,11 @@ $(document).ready(function () {
         return final;
     }
 
+    function enabledIn(node) {
+        return node.incomers('node.enabled').map((x) => {return x._private.data.id});
+    }
+
+    function getPrereqs(node) {
+        return node._private.data.prereqs;
+    }
 });
