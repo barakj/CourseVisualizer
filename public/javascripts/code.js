@@ -9,7 +9,6 @@ let defaultDept = "CPSC";
  * Third approach: by course code (i.e. yxx, by xx).
  */
 
-
 /* Keep track of intersecting edges */
 let intersecting = [];
 /* Keep track of courses names indexed by the course year */
@@ -21,11 +20,6 @@ let alreadyCreatedNodes = {};
 /**
  * Parameters for spacing
  */
-
-/**
- * Approach 1
- */
-
 const params = {
     "x-start-1": 50,
     "x-interval": 300,
@@ -35,39 +29,21 @@ const params = {
     "x-start-5": 1250,
     "x-start-6": 1550,
     "y-start": 50,
-    "y-interval": 100
+    "y-interval": 100 // "Approach 3 had "y-interval": 30
 };
 
-/**
- * Approach 3
- */
-
-// const params = {
-//     "x-start-1": 50,
-//     "x-interval": 300,
-//     "x-start-2": 350,
-//     "x-start-3": 650,
-//     "x-start-4": 950,
-//     "x-start-5": 1250,
-//     "x-start-6": 1550,
-//     "y-start": 50,
-//     "y-interval": 30
-// };
-
-Promise.all([
-    fetch('javascripts/cy-style.json', {mode: 'no-cors'})
-        .then(function(res) {
+$(document).ready(function () {
+    let pStyle = fetch('javascripts/cy-style.json', {mode: 'no-cors'}).then(function(res) {
             return res.json()
-        }),
-    fetch('javascripts/data.json', {mode: 'no-cors'})
-        .then(function(res) {
+        });
+    let pData = fetch('javascripts/data.json', {mode: 'no-cors'}).then(function(res) {
             return res.json()
-        })
-])
-    .then(function(dataArray) {
+        });
+    Promise.all([pStyle, pData]).then(function(dataArray) {
         globalData = dataArray[1];
         globalStyle = dataArray[0];
         $(document).ready(function () {
+            init(defaultDept);
             let select = $('#department-select');
             for (let dept of globalData["depts"]) {
                 if (dept === defaultDept) {
@@ -79,7 +55,6 @@ Promise.all([
         })
     });
 
-$(document).ready(function () {
     $('#department-button').on('click', function () {
         init($('#department-select').val());
     });

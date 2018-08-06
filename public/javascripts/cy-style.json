@@ -2,24 +2,29 @@
   {
     "selector": "node",
     "style": {
-      "background-color": "#74bef7",
+      "background-color": "#700000",
       "label": "data(id)",
       "width": "label",
       "height": "label",
       "text-halign": "center",
       "text-valign": "center",
+      "font-size": 20,
       "text-outline-opacity": 1,
       "text-outline-width": 1,
-      "padding": 7,
+      "padding": 5,
       "color": "#ffffff",
-      "shape": "roundrectangle"
+      "shape": "roundrectangle",
+      "border-opacity": 1,
+      "border-color": "#ffffff",
+      "border-width": 2,
+      "border-style": "solid"
     }
   },
 
   {
     "selector": "node.available",
     "style": {
-      "color": "#69ce63"
+      "background-color": "#00A7E1"
     }
   },
 
@@ -36,8 +41,8 @@
       "display": "none",
       "curve-style": "bezier",
       "width": 3,
-      "line-color": "#636363",
-      "target-arrow-color": "#636363",
+      "line-color": "#ffffff",
+      "target-arrow-color": "#ffffff",
       "target-arrow-shape": "triangle"
     }
   },
