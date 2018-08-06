@@ -251,7 +251,7 @@ $(document).ready(function () {
         let rule = Object.keys(ruleObj)[0];
         switch (rule) {
             case "either":
-                return meetsPrereqs(ruleObj[rule], enabled); // TODO SUPPORT EITHER SELECTIONS
+                return meetsPrereqs(ruleObj[rule][0], enabled); // TODO SUPPORT EITHER SELECTIONS
             case "and":
                 for (let sub of ruleObj[rule]) {
                     if (!meetsPrereqs(sub, enabled)) {
