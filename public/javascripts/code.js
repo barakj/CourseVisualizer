@@ -95,10 +95,13 @@ $(document).ready(function () {
 
         cy.on('cxttap', 'node', function(evt){
             var node = evt.target;
-            if (node.hasClass('enabled')) {
-                attemptDisable(node);
-            } else {
-                attemptEnable(node);
+            let available = node.hasClass('available');
+            let enabled = node.hasClass('enabled');
+            let force = $('#force-register').prop('checked');
+            if (available || (!enabled && force)) {
+                enable(node);
+            } else if (enabled) {
+                disable(node);
             }
         });
 
@@ -109,10 +112,12 @@ $(document).ready(function () {
             } else {
                 node.incomers('edge').addClass('hovered');
             }
-            if ($('#post-cascade').prop('checked')) {
-                node.successors('edge').addClass('hovered');
-            } else {
-                node.outgoers('edge').addClass('hovered');
+            if($('#dependents').prop('checked')) {
+                if ($('#post-cascade').prop('checked')) {
+                    node.successors('edge').addClass('hovered');
+                } else {
+                    node.outgoers('edge').addClass('hovered');
+                }
             }
         });
 
@@ -165,7 +170,6 @@ $(document).ready(function () {
                 let year = courses[course].code[0];
                 node.data = {
                     id: course,
-                    name: course,
                     prereqs: courses[course].prereqs,
                     prereqString: courses[course]["prereq original"],
                     shortname: courses[course]["shortname"],
@@ -206,28 +210,17 @@ $(document).ready(function () {
         $('#popup').remove();
     }
 
-    function attemptEnable(node) {
-        if (node.hasClass('available')) {
-            enable(node);
-        }
-    }
-
-    function attemptDisable(node) {
-        disable(node);
-    }
-
     function enable(node) {
         node.addClass('enabled');
         node.removeClass('available');
         node.outgoers('edge').addClass('enabled');
-        let outNodes = node.outgoers('node');
-        outNodes.forEach(function (out) {
+        node.outgoers('node').forEach(function (out) {
             let prereqs = out._private.data.prereqs;
             let enabled = out.incomers('node.enabled').map((x) => {return x._private.data.id});
             if (!out.hasClass('enabled') && meetsPrereqs(prereqs, enabled)) {
                 out.addClass('available');
             }
-        })
+        });
     }
 
     function disable(node) {
@@ -237,11 +230,13 @@ $(document).ready(function () {
             node.addClass('available');
         }
         node.outgoers('edge').removeClass('enabled');
-        node.outgoers('node').forEach(function (out) {
-            if (!meetsPrereqs(getPrereqs(out), enabledIn(out))) {
-                disable(out);
-            }
-        });
+        if (!$('#force-register').prop('checked')) {
+            node.outgoers('node').forEach(function (out) {
+                if (!meetsPrereqs(getPrereqs(out), enabledIn(out))) {
+                    disable(out);
+                }
+            });
+        }
     }
 
     function meetsPrereqs(ruleObj, enabled) {
