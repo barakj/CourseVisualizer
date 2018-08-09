@@ -3,6 +3,21 @@ import json
 import re
 
 
+def normalize(course):
+    dept = None
+    code = None
+    for i, c in enumerate(course):
+        if c.isdigit():
+            dept = course[:i].strip()
+            code = course[i:].strip()
+            break
+    if dept is None or code is None:
+        print("WARN: " + dept + code)
+    while len(code) < 3:
+        code = "0" + code
+    return dept + " " + code
+
+
 def parse_req(string):
     if string.lower().count('either') > 1:
         print('WARN (MULTI EITHER): ' + string)
@@ -50,7 +65,7 @@ def split_and(string):
 
 def make_atom(string):
     courses = re.findall(r'[A-Z]{3,4}[ ]*[\d]{1,3}', string)
-    courses = [x.replace(' ', '') for x in courses]
+    courses = [normalize(x) for x in courses]
     match = re.search(r'(all|one|two|three|four|five|six|seven) of', string.lower())
     op = None
     if match:
@@ -107,7 +122,7 @@ with open('data.csv', newline='') as infile:
                 if dept not in objects["depts"]:
                     objects["depts"].append(dept)
                 if row[12] is not "G":
-                    objects["courses"][row[0] + row[1]] = \
+                    objects["courses"][normalize(dept + row[1])] = \
                          {"dept": row[0],
                             "code": row[1],
                             "shortname": row[5],
