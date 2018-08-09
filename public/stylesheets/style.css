@@ -21,7 +21,7 @@ body {
   position: relative;
   float: left;
   height: 100vh;
-  width: 80%;
+  width: 100vw;
   background-color: #181818;
 }
 
@@ -76,8 +76,9 @@ body {
 }
 
 #sidebar {
-  float: right;
+  position: fixed;
   height: 100vh;
+  left: 80%;
   width: 20%;
   background-color: #002145;
   color: white;

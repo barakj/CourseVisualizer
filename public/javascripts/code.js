@@ -68,7 +68,7 @@ $(document).ready(function () {
             autoungrabify: true,
             maxZoom: 1.5,
             minZoom: 0.5,
-            wheelSensitivity: 0.5,
+            wheelSensitivity: 0.3,
 
             elements: makeGraph(dept),
 
@@ -76,7 +76,7 @@ $(document).ready(function () {
                 name: 'preset',
                 fit: false,
                 pan: { x: 100, y: 0 },
-                zoom: 1.5
+                zoom: 1.3
             },
 
             style: globalStyle
