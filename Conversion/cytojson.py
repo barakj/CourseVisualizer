@@ -2,6 +2,7 @@ import csv
 import json
 import re
 
+
 def parse_req(string):
     if string.lower().count('either') > 1:
         print('WARN (MULTI EITHER): ' + string)
@@ -105,18 +106,20 @@ with open('data.csv', newline='') as infile:
                 dept = row[0]
                 if dept not in objects["depts"]:
                     objects["depts"].append(dept)
-                objects["courses"][row[0]+row[1]] = {"dept": row[0],
-                    "id": row[1],
-                    "shortname": row[5],
-                    "longname": row[6],
-                    "description": row[7],
-                    "degree": row[12],
-                    "prereqs": p_parsed['main'],
-                    "prereq note": p_parsed['note'],
-                    "prereq original": row[15],
-                    "coreqs": c_parsed['main'],
-                    "coreq note": c_parsed['note'],
-                    "coreq original": row[16]}
+                if row[12] is not "G":
+                    objects["courses"][row[0] + row[1]] = \
+                         {"dept": row[0],
+                            "code": row[1],
+                            "shortname": row[5],
+                            "longname": row[6],
+                            "description": row[7],
+                            "degree": row[12],
+                            "prereqs": p_parsed['main'],
+                            "prereq note": p_parsed['note'],
+                            "prereq original": row[15] if row[15] is not '' else None,
+                            "coreqs": c_parsed['main'],
+                            "coreq note": c_parsed['note'],
+                            "coreq original": row[16]}
 
             except:
                 print('WARN (EXCEPTION): ' + row)

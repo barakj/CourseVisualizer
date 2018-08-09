@@ -162,7 +162,7 @@ $(document).ready(function () {
         for (var course in courses) {
             if (course.startsWith(dept) && courses[course].degree === 'U') {
                 var node = {};
-                let year = courses[course].id[0];
+                let year = courses[course].code[0];
                 node.data = {
                     id: course,
                     name: course,
