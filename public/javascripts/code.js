@@ -9,7 +9,6 @@ let defaultDept = "CPSC";
  * Third approach: by course code (i.e. yxx, by xx).
  */
 
-
 /* Keep track of intersecting edges */
 let intersecting = [];
 /* Keep track of courses names indexed by the course year */
@@ -21,11 +20,6 @@ let alreadyCreatedNodes = {};
 /**
  * Parameters for spacing
  */
-
-/**
- * Approach 1
- */
-
 const params = {
     "x-start-1": 50,
     "x-interval": 300,
@@ -35,39 +29,21 @@ const params = {
     "x-start-5": 1250,
     "x-start-6": 1550,
     "y-start": 50,
-    "y-interval": 100
+    "y-interval": 100 // "Approach 3 had "y-interval": 30
 };
 
-/**
- * Approach 3
- */
-
-// const params = {
-//     "x-start-1": 50,
-//     "x-interval": 300,
-//     "x-start-2": 350,
-//     "x-start-3": 650,
-//     "x-start-4": 950,
-//     "x-start-5": 1250,
-//     "x-start-6": 1550,
-//     "y-start": 50,
-//     "y-interval": 30
-// };
-
-Promise.all([
-    fetch('javascripts/cy-style.json', {mode: 'no-cors'})
-        .then(function(res) {
+$(document).ready(function () {
+    let pStyle = fetch('javascripts/cy-style.json', {mode: 'no-cors'}).then(function(res) {
             return res.json()
-        }),
-    fetch('javascripts/data.json', {mode: 'no-cors'})
-        .then(function(res) {
+        });
+    let pData = fetch('javascripts/data.json', {mode: 'no-cors'}).then(function(res) {
             return res.json()
-        })
-])
-    .then(function(dataArray) {
+        });
+    Promise.all([pStyle, pData]).then(function(dataArray) {
         globalData = dataArray[1];
         globalStyle = dataArray[0];
         $(document).ready(function () {
+            init(defaultDept);
             let select = $('#department-select');
             for (let dept of globalData["depts"]) {
                 if (dept === defaultDept) {
@@ -79,7 +55,6 @@ Promise.all([
         })
     });
 
-$(document).ready(function () {
     $('#department-button').on('click', function () {
         init($('#department-select').val());
     });
@@ -93,7 +68,7 @@ $(document).ready(function () {
             autoungrabify: true,
             maxZoom: 1.5,
             minZoom: 0.5,
-            wheelSensitivity: 0.5,
+            wheelSensitivity: 0.3,
 
             elements: makeGraph(dept),
 
@@ -101,7 +76,7 @@ $(document).ready(function () {
                 name: 'preset',
                 fit: false,
                 pan: { x: 100, y: 0 },
-                zoom: 1.5
+                zoom: 1.3
             },
 
             style: globalStyle
@@ -120,10 +95,13 @@ $(document).ready(function () {
 
         cy.on('cxttap', 'node', function(evt){
             var node = evt.target;
-            if (node.hasClass('enabled')) {
-                attemptDisable(node);
-            } else {
-                attemptEnable(node);
+            let available = node.hasClass('available');
+            let enabled = node.hasClass('enabled');
+            let force = $('#force-register').prop('checked');
+            if (available || (!enabled && force)) {
+                enable(node);
+            } else if (enabled) {
+                disable(node);
             }
         });
 
@@ -134,10 +112,12 @@ $(document).ready(function () {
             } else {
                 node.incomers('edge').addClass('hovered');
             }
-            if ($('#post-cascade').prop('checked')) {
-                node.successors('edge').addClass('hovered');
-            } else {
-                node.outgoers('edge').addClass('hovered');
+            if($('#dependents').prop('checked')) {
+                if ($('#post-cascade').prop('checked')) {
+                    node.successors('edge').addClass('hovered');
+                } else {
+                    node.outgoers('edge').addClass('hovered');
+                }
             }
         });
 
@@ -187,10 +167,9 @@ $(document).ready(function () {
         for (var course in courses) {
             if (course.startsWith(dept) && courses[course].degree === 'U') {
                 var node = {};
-                let year = courses[course].id[0];
+                let year = courses[course].code[0];
                 node.data = {
                     id: course,
-                    name: course,
                     prereqs: courses[course].prereqs,
                     prereqString: courses[course]["prereq original"],
                     shortname: courses[course]["shortname"],
@@ -231,28 +210,17 @@ $(document).ready(function () {
         $('#popup').remove();
     }
 
-    function attemptEnable(node) {
-        if (node.hasClass('available')) {
-            enable(node);
-        }
-    }
-
-    function attemptDisable(node) {
-        disable(node);
-    }
-
     function enable(node) {
         node.addClass('enabled');
         node.removeClass('available');
         node.outgoers('edge').addClass('enabled');
-        let outNodes = node.outgoers('node');
-        outNodes.forEach(function (out) {
+        node.outgoers('node').forEach(function (out) {
             let prereqs = out._private.data.prereqs;
             let enabled = out.incomers('node.enabled').map((x) => {return x._private.data.id});
             if (!out.hasClass('enabled') && meetsPrereqs(prereqs, enabled)) {
                 out.addClass('available');
             }
-        })
+        });
     }
 
     function disable(node) {
@@ -262,11 +230,13 @@ $(document).ready(function () {
             node.addClass('available');
         }
         node.outgoers('edge').removeClass('enabled');
-        node.outgoers('node').forEach(function (out) {
-            if (!meetsPrereqs(getPrereqs(out), enabledIn(out))) {
-                disable(out);
-            }
-        });
+        if (!$('#force-register').prop('checked')) {
+            node.outgoers('node').forEach(function (out) {
+                if (!meetsPrereqs(getPrereqs(out), enabledIn(out))) {
+                    disable(out);
+                }
+            });
+        }
     }
 
     function meetsPrereqs(ruleObj, enabled) {
@@ -276,7 +246,7 @@ $(document).ready(function () {
         let rule = Object.keys(ruleObj)[0];
         switch (rule) {
             case "either":
-                return meetsPrereqs(ruleObj[rule], enabled); // TODO SUPPORT EITHER SELECTIONS
+                return meetsPrereqs(ruleObj[rule][0], enabled); // TODO SUPPORT EITHER SELECTIONS
             case "and":
                 for (let sub of ruleObj[rule]) {
                     if (!meetsPrereqs(sub, enabled)) {
