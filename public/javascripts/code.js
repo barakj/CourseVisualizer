@@ -144,7 +144,7 @@ $(document).ready(function () {
             let textDiv = $('#text');
             let actionDiv = $('#action');
 
-            titleDiv.append(`<h2>${node._private.data.name}</h2>`)
+            titleDiv.append(`<h2>${node._private.data.display}</h2>`)
                 .append(`<h3>${node._private.data.longname}</h3>`);
 
             textDiv.append(`${node._private.data.description}`)
@@ -170,6 +170,7 @@ $(document).ready(function () {
                 let year = courses[course].code[0];
                 node.data = {
                     id: course,
+                    display: courses[course].display,
                     prereqs: courses[course].prereqs,
                     prereqString: courses[course]["prereq original"],
                     shortname: courses[course]["shortname"],
